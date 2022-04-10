@@ -124,6 +124,7 @@ export type AnyBlock =
  */
 export type Document = {
 	id: string;
+	title: string;
 	revisions: DocumentRevision[];
 };
 
@@ -134,7 +135,6 @@ export type DocumentRevision = WithChildren<
 	DataBlock<
 		BlockType.Document,
 		{
-			title: string;
 			subtitle: string;
 			createdAt: number;
 		}
