@@ -14,6 +14,7 @@ export enum BlockType {
 	Table,
 	Image,
 	Alert,
+	Container,
 }
 
 /**
@@ -22,6 +23,7 @@ export enum BlockType {
 export interface Block {
 	id: string;
 	type: BlockType;
+	tags: string[];
 }
 
 /**
@@ -105,6 +107,15 @@ export type TableBlock = DataBlock<
 export type ImageBlock = DataBlock<BlockType.Image, { src: string; width: number; height: number }>;
 
 /**
+ * An empty container block that has no data, but has children.
+ */
+export type Container = WithChildren<
+	{
+		type: BlockType.Container;
+	} & Block
+>;
+
+/**
  * A union of block types that can be inlined.
  */
 export type InlineBlock = TextBlock;
@@ -145,6 +156,11 @@ export type DocumentRevision = WithChildren<
 
 // #region Joi validation
 
+const BlockSchema = {
+	id: Joi.string().required(),
+	type: Joi.string().required(),
+	tags: Joi.array().items(Joi.string()).required(),
+};
 
 export const FormatSchema = {
 	bold: Joi.boolean().required(),
@@ -154,7 +170,7 @@ export const FormatSchema = {
 };
 
 export const TextBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.Text).required(),
 	data: Joi.object({
 		...FormatSchema,
@@ -163,7 +179,7 @@ export const TextBlockSchema = Joi.object({
 }).id("text");
 
 export const LinkBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.Link),
 	data: Joi.object({
 		...FormatSchema,
@@ -173,7 +189,7 @@ export const LinkBlockSchema = Joi.object({
 }).id("link");
 
 export const HeadingBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.Heading).required(),
 	data: Joi.object({
 		content: Joi.string().required(),
@@ -182,7 +198,7 @@ export const HeadingBlockSchema = Joi.object({
 }).id("heading");
 
 export const ParagraphBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.Paragraph).required(),
 	children: Joi.array().items(Joi.link("#inline")).required(),
 }).id("paragraph");
@@ -193,7 +209,7 @@ export const QuoteBlockSchema = Joi.object({
 }).id("quote");
 
 export const ListBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.List).required(),
 	data: Joi.object({
 		ordered: Joi.boolean().required(),
@@ -202,7 +218,7 @@ export const ListBlockSchema = Joi.object({
 }).id("list");
 
 export const TableBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.Table).required(),
 	data: Joi.object({
 		columns: Joi.array().items(Joi.link("#inline")).required(),
@@ -213,7 +229,7 @@ export const TableBlockSchema = Joi.object({
 }).id("table");
 
 export const ImageBlockSchema = Joi.object({
-	id: Joi.string().required(),
+	...BlockSchema,
 	type: Joi.number().valid(BlockType.Image).required(),
 	data: Joi.object({
 		src: Joi.string().required(),
@@ -221,6 +237,12 @@ export const ImageBlockSchema = Joi.object({
 		height: Joi.number().required(),
 	}),
 }).id("image");
+
+export const ContainerSchema = Joi.object({
+	...BlockSchema,
+	type: Joi.number().valid(BlockType.Container).required(),
+	children: Joi.array().items(Joi.link("#any")).required(),
+}).id("container");
 
 export const InlineBlockSchema = Joi.allow(Joi.link("#text"), Joi.link("#link")).id("inline");
 
