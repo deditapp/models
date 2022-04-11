@@ -145,20 +145,16 @@ export type DocumentRevision = WithChildren<
 
 // #region Joi validation
 
-export const BlockSchema = Joi.object({
-	id: Joi.string().required(),
-	type: Joi.number().required(),
-});
 
-export const FormatSchema = Joi.object({
+export const FormatSchema = {
 	bold: Joi.boolean().required(),
 	italic: Joi.boolean().required(),
 	underline: Joi.boolean().required(),
 	strikethrough: Joi.boolean().required(),
-});
+};
 
 export const TextBlockSchema = Joi.object({
-	...BlockSchema,
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.Text).required(),
 	data: Joi.object({
 		...FormatSchema,
@@ -167,7 +163,7 @@ export const TextBlockSchema = Joi.object({
 }).id("text");
 
 export const LinkBlockSchema = Joi.object({
-	...BlockSchema,
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.Link),
 	data: Joi.object({
 		...FormatSchema,
@@ -177,7 +173,7 @@ export const LinkBlockSchema = Joi.object({
 }).id("link");
 
 export const HeadingBlockSchema = Joi.object({
-	...BlockSchema,
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.Heading).required(),
 	data: Joi.object({
 		content: Joi.string().required(),
@@ -186,6 +182,7 @@ export const HeadingBlockSchema = Joi.object({
 }).id("heading");
 
 export const ParagraphBlockSchema = Joi.object({
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.Paragraph).required(),
 	children: Joi.array().items(Joi.link("#inline")).required(),
 }).id("paragraph");
@@ -196,7 +193,7 @@ export const QuoteBlockSchema = Joi.object({
 }).id("quote");
 
 export const ListBlockSchema = Joi.object({
-	...BlockSchema,
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.List).required(),
 	data: Joi.object({
 		ordered: Joi.boolean().required(),
@@ -205,7 +202,7 @@ export const ListBlockSchema = Joi.object({
 }).id("list");
 
 export const TableBlockSchema = Joi.object({
-	...BlockSchema,
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.Table).required(),
 	data: Joi.object({
 		columns: Joi.array().items(Joi.link("#inline")).required(),
@@ -216,7 +213,7 @@ export const TableBlockSchema = Joi.object({
 }).id("table");
 
 export const ImageBlockSchema = Joi.object({
-	...BlockSchema,
+	id: Joi.string().required(),
 	type: Joi.number().valid(BlockType.Image).required(),
 	data: Joi.object({
 		src: Joi.string().required(),
