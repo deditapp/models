@@ -1,5 +1,7 @@
 import Joi from "joi";
 
+import { Version } from "../version";
+
 /**
  * The enum of all possible block types.
  */
@@ -14,7 +16,7 @@ export enum BlockType {
 	Table,
 	Image,
 	Alert,
-	Container,
+	Group,
 }
 
 /**
@@ -109,9 +111,9 @@ export type ImageBlock = DataBlock<BlockType.Image, { src: string; width: number
 /**
  * An empty container block that has no data, but has children.
  */
-export type Container = WithChildren<
+export type Group = WithChildren<
 	{
-		type: BlockType.Container;
+		type: BlockType.Group;
 	} & Block
 >;
 
@@ -139,6 +141,7 @@ export type Document = {
 	id: string;
 	title: string;
 	revisions: DocumentRevision[];
+	schemaVersion: Version;
 };
 
 /**
@@ -240,7 +243,7 @@ export const ImageBlockSchema = Joi.object({
 
 export const ContainerSchema = Joi.object({
 	...BlockSchema,
-	type: Joi.number().valid(BlockType.Container).required(),
+	type: Joi.number().valid(BlockType.Group).required(),
 	children: Joi.array().items(Joi.link("#any")).required(),
 }).id("container");
 
