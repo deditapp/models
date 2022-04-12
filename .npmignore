@@ -1,0 +1,6 @@
+# ignore files that do not need to be in published package
+src
+.prettierrc
+jest.config.js
+pnpm-lock.yaml
+tsconfig.json

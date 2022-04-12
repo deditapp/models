@@ -2,8 +2,9 @@
 	"name": "@dedit/models",
 	"version": "1.0.0",
 	"description": "Shared typings and models for cross-service usage.",
-	"main": "src/index.ts",
+	"main": "dist/index.js",
 	"scripts": {
+		"build": "tsc",
 		"test": "jest"
 	},
 	"repository": {
