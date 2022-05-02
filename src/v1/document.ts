@@ -7,6 +7,8 @@ import { Version } from "../version";
  */
 export enum BlockType {
 	Document,
+	Root,
+	Ref,
 	Text,
 	Link,
 	Heading,
@@ -23,9 +25,7 @@ export enum BlockType {
  * The generic block type.
  */
 export interface Block {
-	id: string;
 	type: BlockType;
-	tags: string[];
 }
 
 /**
@@ -45,6 +45,26 @@ export type WithChildren<B extends Block> = B & { children: AnyBlock[] };
  * Utility type for providing children typings to a block type.
  */
 export type WithInlineChildren<B extends Block> = B & { children: InlineBlock[] };
+
+/**
+ * A root block, used by references.
+ */
+export interface RootBlock extends Block {
+	id: string;
+	type: BlockType.Root;
+	children: AnyBlock[];
+	tags: string[];
+}
+
+/**
+ * A reference block to a block elsewhere.
+ */
+export interface RefBlock extends Block {
+	type: BlockType.Ref;
+	data: {
+		id: string;
+	};
+}
 
 /**
  * Generic formatting options.
@@ -126,6 +146,8 @@ export type InlineBlock = TextBlock;
  * A union of block types that can be in a document.
  */
 export type AnyBlock =
+	| RootBlock
+	| RefBlock
 	| TextBlock
 	| HeadingBlock
 	| ParagraphBlock
@@ -142,6 +164,7 @@ export type Document = {
 	title: string;
 	revisions: DocumentRevision[];
 	schemaVersion: Version;
+	tags: string[];
 };
 
 /**
@@ -160,10 +183,23 @@ export type DocumentRevision = WithChildren<
 // #region Joi validation
 
 const BlockSchema = {
-	id: Joi.string().required(),
-	type: Joi.string().required(),
-	tags: Joi.array().items(Joi.string()).required(),
+	type: Joi.number().required(),
 };
+
+export const RootBlockSchema = Joi.object({
+	...BlockSchema,
+	type: Joi.number().valid(BlockType.Root).required(),
+	id: Joi.string().required(),
+	children: Joi.array().items(Joi.link("#any")).required(),
+}).id("root");
+
+export const RefBlockSchema = Joi.object({
+	...BlockSchema,
+	type: Joi.number().valid(BlockType.Ref).required(),
+	data: Joi.object({
+		id: Joi.string().required(),
+	}).required(),
+}).id("ref");
 
 export const FormatSchema = {
 	bold: Joi.boolean().required(),
@@ -250,6 +286,8 @@ export const ContainerSchema = Joi.object({
 export const InlineBlockSchema = Joi.allow(Joi.link("#text"), Joi.link("#link")).id("inline");
 
 export const AnyBlockSchema = Joi.allow(
+	Joi.link("#root"),
+	Joi.link("#ref"),
 	Joi.link("#text"),
 	Joi.link("#link"),
 	Joi.link("#heading"),
