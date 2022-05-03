@@ -127,11 +127,10 @@ export type ImageBlock = DataBlock<BlockType.Image, { src: string; width: number
 /**
  * An empty container block that has no data, but has children.
  */
-export type Group = WithChildren<
-	{
-		type: BlockType.Group;
-	} & Block
->;
+export interface GroupBlock extends Block {
+	type: BlockType.Group;
+	children: AnyBlock[];
+}
 
 /**
  * A union of block types that can be inlined.
@@ -150,4 +149,5 @@ export type AnyBlock =
 	| QuoteBlock
 	| ListBlock
 	| TableBlock
-	| ImageBlock;
+	| ImageBlock
+	| GroupBlock;
