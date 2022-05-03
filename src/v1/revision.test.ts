@@ -1,10 +1,11 @@
 import Joi, { ValidationResult } from "joi";
 
 import {
-	BlockType, Format, HeadingBlock, HeadingBlockSchema, LinkBlock,
-	LinkBlockSchema, ParagraphBlock, ParagraphBlockSchema, TextBlock,
-	TextBlockSchema
-} from "./document";
+	BlockType, Format, HeadingBlock, LinkBlock, ParagraphBlock, TextBlock
+} from "./block";
+import {
+	HeadingBlockSchema, LinkBlockSchema, ParagraphBlockSchema, TextBlockSchema
+} from "./validation/block";
 
 const DEFAULT_FORMATTING: Format = {
 	bold: false,
