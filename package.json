@@ -1,6 +1,6 @@
 {
 	"name": "@dedit/models",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "Shared typings and models for cross-service usage.",
 	"main": "src/index.ts",
 	"scripts": {
