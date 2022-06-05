@@ -1,14 +1,14 @@
-import { BlockType, DataBlock, WithChildren } from "./block";
-
 /**
  * The root document revision, containing the root blocks.
  */
-export type DocumentRevision = WithChildren<
-	DataBlock<
-		BlockType.Document,
-		{
-			subtitle: string;
-			createdAt: number;
-		}
-	>
->;
+export interface DocumentRevision {
+	documentId: string;
+	/**
+	 * ISO 8601 date string.
+	 */
+	createdAt: string;
+	/**
+	 * ID of the root block.
+	 */
+	blockId: string;
+}

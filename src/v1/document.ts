@@ -1,4 +1,3 @@
-import { Version } from "../version";
 import { DocumentRevision } from "./revision";
 
 /**
@@ -8,6 +7,17 @@ export type Document = {
 	id: string;
 	title: string;
 	revisions: DocumentRevision[];
-	schemaVersion: Version;
 	tags: string[];
+	/**
+	 * ISO 8601 date string.
+	 */
+	createdAt: string;
+	/**
+	 * ISO 8601 date string.
+	 */
+	updatedAt: string;
+	/**
+	 * The ID of the document owner.
+	 */
+	ownerId: string;
 };

@@ -2,7 +2,6 @@
  * The enum of all possible block types.
  */
 export enum BlockType {
-	Document,
 	Root,
 	Ref,
 	Text,
