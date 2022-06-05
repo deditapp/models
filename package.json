@@ -19,12 +19,12 @@
 	},
 	"homepage": "https://github.com/deditapp/models#readme",
 	"devDependencies": {
-		"@types/jest": "^27.4.1",
+		"@types/jest": "^27.5.2",
 		"@types/uuid": "^8.3.4",
 		"jest": "^27.5.1",
 		"prettier": "^2.6.2",
-		"ts-jest": "^27.1.4",
-		"typescript": "^4.6.3",
+		"ts-jest": "^27.1.5",
+		"typescript": "^4.7.3",
 		"uuid": "^8.3.2"
 	},
 	"dependencies": {
