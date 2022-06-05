@@ -1,4 +1,4 @@
-import { DocumentRevision } from "./revision";
+
 
 /**
  * The root meta-document, with its sub-revisions.
@@ -6,7 +6,6 @@ import { DocumentRevision } from "./revision";
 export type Document = {
 	id: string;
 	title: string;
-	revisions: DocumentRevision[];
 	tags: string[];
 	/**
 	 * ISO 8601 date string.
