@@ -1,4 +1,5 @@
-
+import { DeepPartial } from "../util";
+import { RootBlock } from "./block";
 
 /**
  * The root meta-document, with its sub-revisions.
@@ -20,3 +21,13 @@ export type Document = {
 	 */
 	ownerId: string;
 };
+
+/**
+ * A document as sent over the wire. This is used for updates.
+ */
+export type PartialDocument = Partial<Omit<Document, "createdAt" | "id" | "updatedAt" | "ownerId">>;
+
+/**
+ * A document update payload.
+ */
+export type DocumentUpdatePayload = PartialDocument & { root?: DeepPartial<RootBlock> };

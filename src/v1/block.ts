@@ -150,3 +150,5 @@ export type AnyBlock =
 	| TableBlock
 	| ImageBlock
 	| GroupBlock;
+
+export type RootBlockPayload = RootBlock;
